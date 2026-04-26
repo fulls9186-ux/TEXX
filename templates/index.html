@@ -1,477 +1,223 @@
 <!DOCTYPE html>
-
 <html lang="zh-Hant">
-
 <head>
-
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>現勘表</title>
 
-
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-
-
 <style>
-
 body {
-
-    font-family: "Segoe UI", sans-serif;
-
+    font-family: "Microsoft JhengHei", "Segoe UI", sans-serif;
     background: #eef2f7;
-
     margin: 0;
-
 }
-
-
 
 /* 主卡片 */
-
 .container {
-
-    max-width: 900px;
-
+    max-width: 800px; /* 稍微縮小寬度，更符合 A4 比例 */
     margin: 30px auto;
-
     background: #fff;
-
-    padding: 25px;
-
+    padding: 30px;
     border-radius: 12px;
-
     box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-
 }
-
-
-
-/* 標題 */
 
 h2 {
-
     text-align: center;
-
     margin-bottom: 20px;
-
+    color: #333;
 }
-
-
-
-/* 區塊 */
 
 .section {
-
     margin-top: 25px;
-
     padding-top: 15px;
-
     border-top: 1px solid #ddd;
-
 }
-
-
 
 .section-title {
-
     font-weight: bold;
-
-    margin-bottom: 10px;
-
-    color: #333;
-
+    margin-bottom: 12px;
+    color: #007bff;
 }
-
-
-
-/* 表單排版 */
 
 .grid {
-
     display: grid;
-
     grid-template-columns: repeat(2, 1fr);
-
-    gap: 12px;
-
+    gap: 15px;
 }
-
-
 
 .full {
-
     grid-column: span 2;
-
 }
-
-
-
-/* label + input */
 
 .field {
-
     display: flex;
-
     flex-direction: column;
-
 }
-
-
 
 label {
-
-    font-size: 13px;
-
-    margin-bottom: 4px;
-
+    font-size: 14px;
+    margin-bottom: 6px;
     color: #555;
-
 }
 
-
-
+/* 為了讓 PDF 抓得更準，強化 input 樣式 */
 input, textarea {
-
-    padding: 8px;
-
+    padding: 10px;
     border-radius: 6px;
-
-    border: 1px solid #ccc;
-
-    transition: 0.2s;
-
+    border: 1px solid #bbb;
+    font-size: 14px;
+    background: #fafafa;
 }
-
-
-
-input:focus, textarea:focus {
-
-    border-color: #007bff;
-
-    outline: none;
-
-}
-
-
-
-/* radio */
 
 .radio-group {
-
     display: flex;
-
-    gap: 10px;
-
+    gap: 15px;
     margin-top: 5px;
-
+    align-items: center;
 }
 
-
-
-/* 按鈕 */
+.radio-group label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 0;
+}
 
 button {
-
-    margin-top: 25px;
-
-    width: 100%;
-
+    margin: 25px auto;
+    display: block;
+    width: 200px;
     padding: 12px;
-
-    background: #007bff;
-
+    background: #28a745;
     border: none;
-
     color: white;
-
     font-size: 16px;
-
     border-radius: 8px;
-
     cursor: pointer;
-
 }
-
-
 
 button:hover {
-
-    background: #0056b3;
-
+    background: #218838;
 }
-
-
-
-/* 手機優化 */
 
 @media (max-width: 600px) {
-
-    .grid {
-
-        grid-template-columns: 1fr;
-
-    }
-
-    .full {
-
-        grid-column: span 1;
-
-    }
-
+    .grid { grid-template-columns: 1fr; }
+    .full { grid-column: span 1; }
 }
-
 </style>
-
 </head>
-
-
 
 <body>
 
-
-
 <div class="container" id="formArea">
+    <h2>工程現勘表</h2>
 
-<h2>現勘表</h2>
+    <div class="grid">
+        <div class="field"><label>日期</label><input type="date"></div>
+        <div class="field"><label>地點</label><input type="text"></div>
+        <div class="field"><label>專案名稱</label><input type="text"></div>
+        <div class="field"><label>客戶名稱</label><input type="text"></div>
+        <div class="field full"><label>現場地址</label><input type="text"></div>
+        <div class="field"><label>聯絡人 / 職稱</label><input type="text"></div>
+        <div class="field"><label>聯絡電話</label><input type="text"></div>
+        <div class="field full"><label>施工日期 / 時段</label><input type="text"></div>
+    </div>
 
+    <div class="section">
+        <div class="section-title">設備資訊</div>
+        <div class="grid">
+            <div class="field">
+                <label>種類</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="type"> 黑</label>
+                    <label><input type="radio" name="type"> 白</label>
+                </div>
+            </div>
+            <div class="field"><label>尺寸 (長)</label><input type="text"></div>
+            <div class="field"><label>尺寸 (寬)</label><input type="text"></div>
+            <div class="field"><label>尺寸 (厚)</label><input type="text"></div>
+            <div class="field"><label>離地高度</label><input type="text"></div>
+            <div class="field"><label>距天花板</label><input type="text"></div>
+            <div class="field"><label>左距離</label><input type="text"></div>
+            <div class="field"><label>右距離</label><input type="text"></div>
+        </div>
+    </div>
 
+    <div class="section">
+        <div class="section-title">電源與網路</div>
+        <div class="grid">
+            <div class="field"><label>插座數量</label><input type="text"></div>
+            <div class="field"><label>插座距離</label><input type="text"></div>
+            <div class="field full"><label>大屏至電腦距離</label><input type="text"></div>
+            <div class="field">
+                <label>插座類型</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="power"> 2線</label>
+                    <label><input type="radio" name="power"> 3線</label>
+                </div>
+            </div>
+            <div class="field">
+                <label>電壓</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="voltage"> 110V</label>
+                    <label><input type="radio" name="voltage"> 220V</label>
+                </div>
+            </div>
+            <div class="field full">
+                <label>網路</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="net"> 實體</label>
+                    <label><input type="radio" name="net"> WIFI</label>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<div class="grid">
-
-<div class="field"><label>日期</label><input type="date"></div>
-
-<div class="field"><label>地點</label><input type="text"></div>
-
-
-
-<div class="field"><label>專案名稱</label><input type="text"></div>
-
-<div class="field"><label>客戶名稱</label><input type="text"></div>
-
-
-
-<div class="field full"><label>現場地址</label><input type="text"></div>
-
-
-
-<div class="field"><label>聯絡人 / 職稱</label><input type="text"></div>
-
-<div class="field"><label>聯絡電話</label><input type="text"></div>
-
-
-
-<div class="field full"><label>施工日期 / 時段</label><input type="text"></div>
-
+    <div class="section">
+        <div class="section-title">其他</div>
+        <div class="grid">
+            <div class="field full"><label>拆除設備 / 處理方式</label><textarea rows="2"></textarea></div>
+            <div class="field full"><label>走線方式</label><input type="text"></div>
+            <div class="field full"><label>壓條 / 線槽</label><input type="text"></div>
+            <div class="field full"><label>備註</label><textarea rows="3"></textarea></div>
+        </div>
+    </div>
 </div>
 
-
-
-<div class="section">
-
-<div class="section-title">設備資訊</div>
-
-
-
-<div class="grid">
-
-<div class="field">
-
-<label>種類</label>
-
-<div class="radio-group">
-
-<label><input type="radio" name="type"> 黑</label>
-
-<label><input type="radio" name="type"> 白</label>
-
-</div>
-
-</div>
-
-
-
-<div class="field"><label>尺寸 (長)</label><input type="text"></div>
-
-<div class="field"><label>尺寸 (寬)</label><input type="text"></div>
-
-<div class="field"><label>尺寸 (厚)</label><input type="text"></div>
-
-
-
-<div class="field"><label>離地高度</label><input type="text"></div>
-
-<div class="field"><label>距天花板</label><input type="text"></div>
-
-
-
-<div class="field"><label>左距離</label><input type="text"></div>
-
-<div class="field"><label>右距離</label><input type="text"></div>
-
-</div>
-
-</div>
-
-
-
-<div class="section">
-
-<div class="section-title">電源與網路</div>
-
-
-
-<div class="grid">
-
-<div class="field"><label>插座數量</label><input type="text"></div>
-
-<div class="field"><label>插座距離</label><input type="text"></div>
-
-
-
-<div class="field full"><label>大屏至電腦距離</label><input type="text"></div>
-
-
-
-<div class="field">
-
-<label>插座類型</label>
-
-<div class="radio-group">
-
-<label><input type="radio" name="power"> 2線</label>
-
-<label><input type="radio" name="power"> 3線</label>
-
-</div>
-
-</div>
-
-
-
-<div class="field">
-
-<label>電壓</label>
-
-<div class="radio-group">
-
-<label><input type="radio" name="voltage">110</label>
-
-<label><input type="radio" name="voltage">220</label>
-
-</div>
-
-</div>
-
-
-
-<div class="field full">
-
-<label>網路</label>
-
-<div class="radio-group">
-
-<label><input type="radio" name="net">實體</label>
-
-<label><input type="radio" name="net">WIFI</label>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-
-
-<div class="section">
-
-<div class="section-title">其他</div>
-
-
-
-<div class="grid">
-
-<div class="field full">
-
-<label>拆除設備 / 處理方式</label>
-
-<textarea rows="3"></textarea>
-
-</div>
-
-
-
-<div class="field full"><label>走線方式</label><input type="text"></div>
-
-<div class="field full"><label>壓條 / 線槽</label><input type="text"></div>
-
-
-
-<div class="field full">
-
-<label>備註</label>
-
-<textarea rows="4"></textarea>
-
-</div>
-
-</div>
-
-</div>
-
-
-
-</div>
-
-
-
-<button onclick="downloadPDF()">下載 PDF</button>
-
-
+<button onclick="downloadPDF()">下載 PDF 表單</button>
 
 <script>
-
 async function downloadPDF() {
-
     const { jsPDF } = window.jspdf;
-
     const element = document.getElementById("formArea");
 
+    // 優化截圖品質
+    const canvas = await html2canvas(element, {
+        scale: 2, // 提高解析度到 2 倍，解決吃字問題
+        useCORS: true,
+        logging: false,
+        backgroundColor: "#ffffff"
+    });
 
-
-    const canvas = await html2canvas(element);
-
-    const imgData = canvas.toDataURL("image/png");
-
-
-
+    const imgData = canvas.toDataURL("image/jpeg", 1.0); // 使用 JPEG 品質最高
     const pdf = new jsPDF("p", "mm", "a4");
 
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = pdf.internal.pageSize.getHeight();
+    
+    // 計算圖片在 PDF 中的比例 (留一點邊距 10mm)
+    const margin = 10;
+    const imgWidth = pdfWidth - (margin * 2);
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-
-    const imgWidth = 210;
-
-    const imgHeight = canvas.height * imgWidth / canvas.width;
-
-
-
-    pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
-
-    pdf.save("現勘表.pdf");
-
+    pdf.addImage(imgData, "JPEG", margin, margin, imgWidth, imgHeight);
+    pdf.save("現勘表_" + new Date().getTime() + ".pdf");
 }
-
 </script>
 
-
-
 </body>
-
 </html>
